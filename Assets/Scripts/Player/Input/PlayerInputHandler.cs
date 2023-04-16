@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,21 +9,27 @@ public class PlayerInputHandler : MonoBehaviour
     public bool JumpInput { get; private set; }
     public bool JumpInputStop { get; private set; }
     public bool GrabInput { get; private set; }
+    public bool DashInput { get; private set; }
+    public bool DashInputStop { get; private set; }
 
     [SerializeField]
     private float inputHoldTime = 0.2f;
 
     private float jumpInputStartTime;
 
+    private float dashInputStartTime;
+
     private void Update()
     {
         CheckJumpInputHoldTime();
+        CheckDashInputHoldTime();
     }
 
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         RawMovementInput = context.ReadValue<Vector2>();
 
+        // Adjust to GamePad 
         if (Mathf.Abs(RawMovementInput.x) > 0.5f)
         {
             NormInputX = (int)(RawMovementInput * Vector2.right).normalized.x;
@@ -72,6 +76,22 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
+    public void onDashInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            DashInput = true;
+            DashInputStop = false;
+            dashInputStartTime = Time.time;
+        }
+        else if (context.canceled)
+        {
+            DashInputStop = true;
+        }
+    }
+
+    public void UseDashInput() => DashInput = false;
+
     public void UseJumpInput() => JumpInput = false;
 
     private void CheckJumpInputHoldTime()
@@ -79,6 +99,14 @@ public class PlayerInputHandler : MonoBehaviour
         if (Time.time >= (jumpInputStartTime + inputHoldTime))
         {
             JumpInput = false;
+        }
+    }
+
+    private void CheckDashInputHoldTime()
+    {
+        if (Time.time >= (dashInputStartTime + inputHoldTime))
+        {
+            DashInput = false;
         }
     }
 }

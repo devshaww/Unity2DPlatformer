@@ -157,6 +157,9 @@ public class PlayerController : MonoBehaviour
                 // So, use floor to get the left x of the tile to climb
                 // ledgePosBot means the bottom one of two ledgeChecks(actually to make it easy the bottom one is exactly the wall check)
                 // tile size is 1x1, so this makes sense
+                // ledgeClimbXOffset1 is the distance in reverse direction of wall detection, used to determine the corner's x coordinate
+                // ledgeClimbYOffset2 is the offset between wallcheckposition.y and the y value to be update after playing ledgeclimb animation
+                // ledgePos1 is the position of player during animation, while ledgePos2 is the standing point after animation
                 ledgePos1 = new Vector2(Mathf.Floor(ledgePosBot.x + wallCheckDistance) - ledgeClimbXOffset1, Mathf.Floor(ledgePosBot.y) + ledgeClimbYOffset1);
                 ledgePos2 = new Vector2(Mathf.Floor(ledgePosBot.x + wallCheckDistance) + ledgeClimbXOffset2, Mathf.Floor(ledgePosBot.y) + ledgeClimbYOffset2);
             } else
