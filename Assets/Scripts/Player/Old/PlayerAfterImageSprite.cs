@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAfterImageSprite : MonoBehaviour
@@ -20,7 +18,6 @@ public class PlayerAfterImageSprite : MonoBehaviour
 
     private Color color;
 
-
     private void OnEnable()
     {
         SR = GetComponent<SpriteRenderer>();
@@ -29,8 +26,7 @@ public class PlayerAfterImageSprite : MonoBehaviour
 
         alpha = alphaSet;
         SR.sprite = playerSR.sprite;
-        transform.position = player.position;
-        transform.rotation = player.rotation;
+        transform.SetPositionAndRotation(player.position, player.rotation);
         timeActivated = Time.time;
     }
 

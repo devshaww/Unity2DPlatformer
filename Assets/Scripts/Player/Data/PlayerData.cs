@@ -38,7 +38,7 @@ public class PlayerData : ScriptableObject
     // used for slow motion, time becomes a quarter of regular time passing
     public float holdTimeScale = 0.25f;
     public float dashTime = 0.2f;
-    public float dashSpeed = 30f;
+    public float dashVelocity = 30f;
     // a subtle property that is Rigidbody2D's property determing how air density affects velocity
     public float drag = 10f;
     // decrease y velocity after dashing so that the player drops slower
