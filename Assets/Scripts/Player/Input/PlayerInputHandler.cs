@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +19,8 @@ public class PlayerInputHandler : MonoBehaviour
     public bool DashInput { get; private set; }
     public bool DashInputStop { get; private set; }
 
+    public bool[] AttackInpus { get; private set; }
+
     [SerializeField]
     private float inputHoldTime = 0.2f;
 
@@ -28,6 +31,10 @@ public class PlayerInputHandler : MonoBehaviour
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+
+        int count = Enum.GetValues(typeof(CombatInputs)).Length;
+        AttackInpus = new bool[count];
+
         cam = Camera.main;
     }
 
@@ -37,27 +44,39 @@ public class PlayerInputHandler : MonoBehaviour
         CheckDashInputHoldTime();
     }
 
+    public void OnPrimaryAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.started) {
+            AttackInpus[(int)CombatInputs.primary] = true;
+        }
+
+        if (context.canceled)
+        {
+            AttackInpus[(int)CombatInputs.primary] = false;
+        }
+
+    }
+
+    public void OnSecondaryAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            AttackInpus[(int)CombatInputs.secondary] = true;
+        }
+
+        if (context.canceled)
+        {
+            AttackInpus[(int)CombatInputs.secondary] = false;
+        }
+    }
+
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         RawMovementInput = context.ReadValue<Vector2>();
 
         // Adjust to GamePad 
-        if (Mathf.Abs(RawMovementInput.x) > 0.5f)
-        {
-            NormInputX = (int)(RawMovementInput * Vector2.right).normalized.x;
-        }
-        else
-        {
-            NormInputX = 0;
-        }
-        if (Mathf.Abs(RawMovementInput.y) > 0.5f)
-        {
-            NormInputY = (int)(RawMovementInput * Vector2.up).normalized.y;
-        }
-        else
-        {
-            NormInputY = 0;
-        }
+        NormInputX = Mathf.RoundToInt(RawMovementInput.x);
+        NormInputY = Mathf.RoundToInt(RawMovementInput.y);
     }
 
     public void OnJumpInput(InputAction.CallbackContext context)
@@ -132,4 +151,11 @@ public class PlayerInputHandler : MonoBehaviour
             DashInput = false;
         }
     }
+
+}
+
+public enum CombatInputs
+{
+    primary,
+    secondary
 }
