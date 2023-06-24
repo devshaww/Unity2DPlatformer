@@ -33,13 +33,13 @@ public class PlayerInAirState : PlayerState
     {
         base.DoChecks();
 
-        prevIsTouchingWall = player.CheckIfTouchingWall();
-        prevIsTouchingWallBack = player.CheckIfTouchingWallBack();
+        prevIsTouchingWall = core.CollisionSenses.WallFront;
+        prevIsTouchingWallBack = core.CollisionSenses.WallBack;
 
-        isGrounded = player.CheckIfGrounded();
-        isTouchingWall = player.CheckIfTouchingWall();
-        isTouchingWallBack = player.CheckIfTouchingWallBack();
-        isTouchingLedge = player.CheckIfTouchingLedge();
+        isGrounded = core.CollisionSenses.Grounded;
+        isTouchingWall = core.CollisionSenses.WallFront;
+        isTouchingWallBack = core.CollisionSenses.WallBack;
+        isTouchingLedge = core.CollisionSenses.Ledge;
 
         if (isTouchingWall && !isTouchingLedge)
         {
@@ -91,18 +91,16 @@ public class PlayerInAirState : PlayerState
             stateMachine.ChangeState(player.SecondaryAttackState);
         }
 
-        else if (isGrounded && player.CurrentVelocity.y < 0.01f)
+        else if (isGrounded && core.Movement.CurrentVelocity.y < 0.01f)
         {
             stateMachine.ChangeState(player.LandState);
         }
         else if (isTouchingWall && !isTouchingLedge && !isGrounded)
         {
-            Debug.Log("LogicUpdate: change to ledge climb state");
             stateMachine.ChangeState(player.LedgeClimbState);
         }
         else if (jumpInput && (isTouchingWall || isTouchingWallBack || wallJumpCoyoteTime))
         {
-            //isTouchingWall = player.CheckIfTouchingWall();
             StopWallJumpCoyoteTime();
             player.WallJumpState.DetermineWallJumpDirection(isTouchingWall);
             stateMachine.ChangeState(player.WallJumpState);
@@ -111,7 +109,7 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.JumpState);
         }
-        else if (isTouchingWall && xInput == player.FacingDirection && player.CurrentVelocity.y <= 0)  // wall slide
+        else if (isTouchingWall && xInput == core.Movement.FacingDirection && core.Movement.CurrentVelocity.y <= 0)  // wall slide
         {
             stateMachine.ChangeState(player.WallSlideState);
         }
@@ -125,24 +123,32 @@ public class PlayerInAirState : PlayerState
         }
         else
         {
-            player.CheckIfShouldFlip(xInput);
-            player.SetVelocityX(playerData.movementVelocity * xInput);
+            core.Movement.CheckIfShouldFlip(xInput);
 
-            player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
-            player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
+            // bug(fixed): hit jump -> player keeps going upwards
+            // reason: SetVelocityX uses Movement's CurrentVelocity.y
+            // which does not get updated every frame
+            // so that gravity does not work
+            core.Movement.SetVelocityX(playerData.movementVelocity * xInput);
+
+            player.Anim.SetFloat("yVelocity", core.Movement.CurrentVelocity.y);
+            player.Anim.SetFloat("xVelocity", Mathf.Abs(core.Movement.CurrentVelocity.x));
         }
     }
 
     private void CheckJumpMultiplier()
     {
+        // only gets called once after releasing the jump key
+        // the function is to create the effect that the longer the key gets pressed
+        // the higher the player jumps
         if (isJumping)
         {
             if (jumpInputStop)
             {
-                player.SetVelocityY(player.CurrentVelocity.y * playerData.jumpHeightMultiplier);
+                core.Movement.SetVelocityY(core.Movement.CurrentVelocity.y * playerData.jumpHeightMultiplier);
                 isJumping = false;
             }
-            else if (player.CurrentVelocity.y <= 0f)
+            else if (core.Movement.CurrentVelocity.y <= 0f)
             {
                 isJumping = false;
             }

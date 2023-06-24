@@ -61,8 +61,8 @@ public class PlayerWallGrabState : PlayerTouchingWallState
     // so use HoldPosition to keep resetting velocity to 0
     private void HoldPosition()
     {
-        player.SetVelocityX(0f);
-        player.SetVelocityY(0f);
+        core.Movement.SetVelocityX(0f);
+        core.Movement.SetVelocityY(0f);
 
         player.transform.position = holdPosition;
     }
