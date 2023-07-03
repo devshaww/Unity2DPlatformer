@@ -26,7 +26,7 @@ public class PlayerState
 
     public virtual void Enter()
     {
-        Debug.Log(stateMachine.CurrentState);
+        //Debug.Log(stateMachine.CurrentState);
         DoChecks();
         player.Anim.SetBool(animBoolName, true);
         startTime = Time.time;
