@@ -20,7 +20,7 @@ public class StunState : State
     public override void DoChecks()
     {
         base.DoChecks();
-        isGrounded = entity.CheckGround();
+        isGrounded = core.CollisionSenses.Grounded;
         performCloseRangeAction = entity.CheckPlayerInCloseRange();
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
     }

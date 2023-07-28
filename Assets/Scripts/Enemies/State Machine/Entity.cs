@@ -38,6 +38,9 @@ public class Entity : MonoBehaviour
 
     public virtual void Update()
     {
+		// This step sets currentVelocity to RB.velocity so that when SetVelocityX which uses currentVelocity
+        // gets called in some states, it gets the right value.
+		Core.Movement.LogicUpdate();   
         stateMachine.currentState.LogicUpdate();
 
         anim.SetFloat("yVelocity", Core.Movement.RB.velocity.y);
@@ -53,17 +56,6 @@ public class Entity : MonoBehaviour
         stateMachine.currentState.PhysicsUpdate();
     }
 
-    public virtual bool CheckWall()
-    {
-        return Physics2D.Raycast(wallCheck.position, transform.right, entityData.wallCheckDistance, entityData.whatIsGround);
-    }
-
-    public virtual bool CheckLedge()
-    {
-        return Physics2D.Raycast(ledgeCheck.position, Vector2.down, entityData.ledgeCheckDistance, entityData.whatIsGround);
-
-    }
-
     public virtual bool CheckPlayerInMinAgroRange()
     {
         return Physics2D.Raycast(playerCheck.position, transform.right, entityData.minAgroDistance, entityData.whatIsPlayer);
@@ -77,11 +69,6 @@ public class Entity : MonoBehaviour
     public virtual bool CheckPlayerInCloseRange()
     {
         return Physics2D.Raycast(playerCheck.position, transform.right, entityData.closeRangeActionDistance, entityData.whatIsPlayer);
-    }
-
-    public virtual bool CheckGround()
-    {
-        return Physics2D.OverlapCircle(groundCheck.position, entityData.groundCheckRadius, entityData.whatIsGround);
     }
 
     public virtual void DamageHop(float velocity)

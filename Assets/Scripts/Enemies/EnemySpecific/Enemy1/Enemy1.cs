@@ -45,10 +45,16 @@ public class Enemy1 : Entity
         meleeAttackState = new E1_MeleeAttackState(this, stateMachine, "meleeAttack", meleeAttackPosition, meleeAttackStateData, this);
         stunState = new E1_StunState(this, stateMachine, "stun", stunStateData, this);
         deadState = new E1_DeadState(this, stateMachine, "dead", deadStateData, this);
-        stateMachine.Initialize(moveState);
+        
     }
 
-    public override void OnDrawGizmos()
+	private void Start()
+	{
+        // 之前写在Awake里面导致collisionSenses为null reference
+		stateMachine.Initialize(moveState);
+	}
+
+	public override void OnDrawGizmos()
     {
         base.OnDrawGizmos();
 

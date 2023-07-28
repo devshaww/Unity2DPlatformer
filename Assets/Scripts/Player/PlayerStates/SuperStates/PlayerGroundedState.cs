@@ -23,7 +23,7 @@ public class PlayerGroundedState : PlayerState
         base.DoChecks();
         isGrounded = core.CollisionSenses.Grounded;
         isTouchingWall = core.CollisionSenses.WallFront;
-        isTouchingLedge = core.CollisionSenses.Ledge;
+        isTouchingLedge = core.CollisionSenses.LedgeHorizontal;
     }
 
     public override void Enter()

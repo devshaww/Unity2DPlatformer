@@ -21,7 +21,7 @@ public class DodgeState : State
         base.DoChecks();
         performCloseRangeAction = entity.CheckPlayerInCloseRange();
         isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
-        isGrounded = entity.CheckGround();
+        isGrounded = core.CollisionSenses.Grounded;
     }
 
     public override void Enter()

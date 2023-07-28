@@ -49,6 +49,7 @@ public class Enemy2 : Entity
     public override void Awake()
     {
         base.Awake();
+
         moveState = new E2_MoveState(this, stateMachine, "move", moveStateData, this);
         idleState = new E2_IdleState(this, stateMachine, "idle", idleStateData, this);
         playerDetectedState = new E2_PlayerDetectedState(this, stateMachine, "playerDetected", playerDetectedStateData, this);
@@ -59,10 +60,14 @@ public class Enemy2 : Entity
         dodgeState = new E2_DodgeState(this, stateMachine, "dodge", dodgeStateData, this);
         rangedAttackState = new E2_RangedAttackState(this, stateMachine, "rangedAttack", rangedAttackPosition, rangedAttackStateData, this);
 
-        stateMachine.Initialize(moveState);
     }
 
-    public override void Damage(AttackDetails attackDetails)
+	private void Start()
+	{
+		stateMachine.Initialize(moveState);
+	}
+
+	public override void Damage(AttackDetails attackDetails)
     {
         base.Damage(attackDetails);
 
