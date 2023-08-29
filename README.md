@@ -2,5 +2,9 @@
 A Unity 2D Platformer Game
 
 
-https://user-images.githubusercontent.com/22312553/232323211-d54d599f-8d9c-45eb-8733-6689fd09393b.mp4
+
+
+https://github.com/devshaww/Unity2DPlatformer/assets/22312553/eaa3abfc-6485-4427-b1e4-4a4d107c6941
+
+
 
